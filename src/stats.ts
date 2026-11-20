@@ -39,8 +39,8 @@ export function dailyNorm(s: State, now = Date.now()): number {
   return Math.max(s.settings.dailyGoal, perDay);
 }
 
+/** Время в занятиях: до часа в минутах, дальше в часах с одной цифрой после запятой («5,2 ч»). */
 export function formatDuration(sec: number): string {
-  const h = Math.floor(sec / 3600);
-  const m = Math.round((sec % 3600) / 60);
-  return h ? `${h} ч ${m} мин` : `${m} мин`;
+  if (sec < 3570) return `${Math.round(sec / 60)} мин`;
+  return `${(sec / 3600).toFixed(1).replace('.', ',')} ч`;
 }
