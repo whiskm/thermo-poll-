@@ -5,6 +5,7 @@ import { mergeStates, parseFile, makeBackup } from '../src/io';
 import { schedule, statusOf } from '../src/srs';
 import { emptyState } from '../src/store';
 import { fuzzyEqual, splitMath, termFound, termsFor } from '../src/text';
+import { formatDuration } from '../src/stats';
 
 const NOW = Date.UTC(2026, 10, 20, 12);
 const DAY = 86400000;
@@ -113,5 +114,14 @@ describe('перенос данных', () => {
     expect(() => parseFile('{"app":"other"}')).toThrow(/другого приложения/);
     expect(() => parseFile('не json')).toThrow(/не читается/);
     expect(byId.get(7)).toBeTruthy();
+  });
+});
+
+describe('время в занятиях', () => {
+  it('до часа в минутах, дальше в часах с десятыми', () => {
+    expect(formatDuration(0)).toBe('0 мин');
+    expect(formatDuration(40 * 60)).toBe('40 мин');
+    expect(formatDuration(3600)).toBe('1,0 ч');
+    expect(formatDuration(5 * 3600 + 10 * 60)).toBe('5,2 ч');
   });
 });
