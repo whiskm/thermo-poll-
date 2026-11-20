@@ -9,8 +9,10 @@ import 'katex/dist/katex.min.css';
 import './styles.css';
 import { App } from './App';
 import { flush, loadState } from './store';
+import { isNative } from './platform';
 
-registerSW({ immediate: true });
+// В APK и Windows файлы уже лежат внутри приложения, сервис-воркер не нужен.
+if (!isNative()) registerSW({ immediate: true });
 window.addEventListener('pagehide', flush);
 document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush());
 

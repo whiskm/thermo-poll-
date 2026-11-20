@@ -2,6 +2,10 @@
 
 Приложение для подготовки к зачету по технической термодинамике (часть I): 69 теоретических вопросов с ответами, схемами и режимами заучивания.
 
+Открыть: https://thermo-poll.whiskm.workers.dev/
+
+Скачать APK для Android и установщик для Windows: https://github.com/whiskm/thermo-poll-/releases
+
 ## Что внутри
 
 - Справочник: вопросы, ответы, формулы, схемы, поиск, избранное, свои формулировки и заметки.
@@ -21,3 +25,11 @@ npm run build    # сборка в dist/
 ```
 
 Контент лежит в `content/`, описание полей в `content/README.md`. Публикация на Cloudflare Pages описана в `docs/cloudflare.md`.
+
+## APK и Windows
+
+- `android/`: проект Capacitor, APK собирается командой `npx cap sync android && cd android && ./gradlew assembleRelease`.
+- `src-tauri/`: проект Tauri, установщик Windows собирается командой `npx tauri build` на Windows.
+- `.github/workflows/build.yml`: GitHub Actions собирает оба файла при каждом пуше в `main`.
+- Новая версия: поднимите `version` в `package.json` и слейте изменения в `main`. Релиз `v<версия>` с APK и установщиком появится автоматически.
+- APK подписывается ключом из секретов репозитория: `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`.

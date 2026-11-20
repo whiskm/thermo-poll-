@@ -1,3 +1,4 @@
+import { isCapacitor, isTauri } from './platform';
 import { sanitize, type State } from './store';
 
 export const APP_ID = 'ТермоОпрос';
@@ -75,8 +76,30 @@ export function mergeEdits(cur: State, edits: State['edits'], notes: State['note
   return { ...cur, edits: newer(cur.edits, edits), notes: newer(cur.notes, notes) };
 }
 
-/** Сохраняет текст в файл: через «Поделиться», если браузер умеет отдавать файлы, иначе обычной загрузкой. */
-export async function saveTextFile(name: string, text: string): Promise<'shared' | 'downloaded'> {
+/**
+ * Сохраняет текст в файл.
+ * APK: файл пишется во временную папку и открывается окно «Поделиться» (Диск, Telegram, Файлы).
+ * Windows: окно «Сохранить как».
+ * Браузер: «Поделиться» на телефоне, если он умеет отдавать файлы, иначе обычная загрузка.
+ * Возвращает null, если пользователь закрыл окно без сохранения.
+ */
+export async function saveTextFile(name: string, text: string): Promise<'shared' | 'saved' | 'downloaded' | null> {
+  if (isCapacitor()) {
+    const { Filesystem, Directory, Encoding } = await import('@capacitor/filesystem');
+    const { Share } = await import('@capacitor/share');
+    const res = await Filesystem.writeFile({ path: name, data: text, directory: Directory.Cache, encoding: Encoding.UTF8 });
+    try {
+      await Share.share({ title: name, files: [res.uri], dialogTitle: 'Сохранить или отправить файл' });
+      return 'shared';
+    } catch {
+      return null;
+    }
+  }
+  if (isTauri()) {
+    const { invoke } = await import('@tauri-apps/api/core');
+    const ok = await invoke<boolean>('export_file', { name, contents: text });
+    return ok ? 'saved' : null;
+  }
   const file = new File([text], name, { type: 'application/json' });
   const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
   const coarse = window.matchMedia?.('(pointer: coarse)').matches;
@@ -85,7 +108,7 @@ export async function saveTextFile(name: string, text: string): Promise<'shared'
       await nav.share({ files: [file], title: name });
       return 'shared';
     } catch (e) {
-      if ((e as DOMException)?.name === 'AbortError') throw e;
+      if ((e as DOMException)?.name === 'AbortError') return null;
     }
   }
   const url = URL.createObjectURL(file);
