@@ -176,11 +176,27 @@ jobs:
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Лишние файлы из релиза
+        if: steps.v.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "v${{ steps.v.outputs.version }}" --json assets -q '.assets[].name' \
+            | grep -v '^TermoOpros-' \
+            | while read -r name; do
+                echo "Удаляется $name"
+                gh release delete-asset "v${{ steps.v.outputs.version }}" "$name" -y
+              done
       - uses: actions/download-artifact@v5
         if: steps.v.outputs.exists == 'false'
         with:
+          name: android
           path: out
-          merge-multiple: true
+      - uses: actions/download-artifact@v5
+        if: steps.v.outputs.exists == 'false'
+        with:
+          name: windows
+          path: out
       - uses: softprops/action-gh-release@v2
         if: steps.v.outputs.exists == 'false'
         with:
