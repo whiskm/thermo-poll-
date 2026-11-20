@@ -20,4 +20,4 @@ npm test         # тесты логики
 npm run build    # сборка в dist/
 ```
 
-Контент лежит в `content/`, описание полей в `content/README.md`.
+Контент лежит в `content/`, описание полей в `content/README.md`. Публикация на Cloudflare Pages описана в `docs/cloudflare.md`.
