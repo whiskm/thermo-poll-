@@ -4,6 +4,7 @@ import { Seg, Sheet, Top, ask, toast } from '../components';
 import { makeBackup, makeEdits, mergeEdits, mergeStates, parseFile, saveTextFile, stamp, type Parsed } from '../io';
 import { getState, replaceState, resetProgress, setSettings, useStore } from '../store';
 import { plural } from '../text';
+import { isNative } from '../platform';
 
 export function Settings() {
   const st = useStore((s) => s.settings);
@@ -19,9 +20,11 @@ export function Settings() {
     const name = kind === 'backup' ? `termoopros-${stamp()}.json` : `termoopros-otvety-${stamp()}.json`;
     try {
       const how = await saveTextFile(name, JSON.stringify(data));
-      toast(how === 'shared' ? 'Файл передан' : `Файл ${name} сохранен в загрузки`);
-    } catch {
-      /* пользователь закрыл окно «Поделиться» */
+      if (how === 'shared') toast('Файл передан');
+      else if (how === 'saved') toast('Файл сохранен');
+      else if (how === 'downloaded') toast(`Файл ${name} сохранен в загрузки`);
+    } catch (e) {
+      toast(`Файл не сохранен: ${(e as Error)?.message ?? e}`);
     }
   }
 
@@ -93,7 +96,12 @@ export function Settings() {
       </div>
 
       <p className="small muted center" style={{ marginTop: 24 }}>
-        ТермоОпрос {__APP_VERSION__}. <a href="https://github.com/whiskm/thermo-poll-/releases" target="_blank" rel="noreferrer">Версии для Android и Windows</a>
+        ТермоОпрос {__APP_VERSION__}.{' '}
+        {isNative() ? (
+          'Новые версии: github.com/whiskm/thermo-poll-/releases'
+        ) : (
+          <a href="https://github.com/whiskm/thermo-poll-/releases" target="_blank" rel="noreferrer">Версии для Android и Windows</a>
+        )}
       </p>
 
       {pending && (

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AskHost, TabBar, ToastHost } from './components';
 import { useRoute } from './router';
 import { useStore } from './store';
+import { isCapacitor } from './platform';
 import { Learn } from './screens/Learn';
 import { Session } from './screens/Session';
 import { Exam } from './screens/Exam';
@@ -18,6 +19,12 @@ function useTheme() {
       const dark = theme === 'dark' || (theme === 'system' && mq.matches);
       document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0E1A23' : '#17324A');
+      if (isCapacitor()) {
+        // темный стиль Capacitor означает светлые значки строки состояния
+        import('@capacitor/core')
+          .then(({ SystemBars, SystemBarsStyle }) => SystemBars.setStyle({ style: dark ? SystemBarsStyle.Dark : SystemBarsStyle.Light }))
+          .catch(() => undefined);
+      }
     };
     apply();
     mq.addEventListener('change', apply);
