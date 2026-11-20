@@ -1,4 +1,6 @@
-# Публикация на Cloudflare Pages
+# Публикация на Cloudflare
+
+Рабочий адрес: https://thermo-poll.whiskm.workers.dev/
 
 Сайт собирается на Cloudflare из ветки `main`: каждый пуш в `main` обновляет сайт примерно за 1-2 минуты.
 
