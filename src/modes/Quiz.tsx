@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Progress, QHead, Tex } from '../components';
+import { Progress, QHead, Tex, useScrollTop } from '../components';
 import { byId } from '../content';
 import { answerOf, quizOptions } from '../learn';
 import { statusOf, type Grade } from '../srs';
@@ -13,6 +13,7 @@ function snippet(qid: number): string[] {
 
 export function Quiz({ ids, opts, onDone }: ModeProps) {
   const [i, setI] = useState(0);
+  useScrollTop(i);
   const [picked, setPicked] = useState<number | null>(null);
   const [results, setResults] = useState<Result[]>([]);
   const qid = ids[i];

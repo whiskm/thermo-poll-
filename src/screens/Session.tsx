@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Chips, Seg, SectionPicker, Top } from '../components';
+import { Chips, Seg, SectionPicker, Top, useScrollTop } from '../components';
 import { byId } from '../content';
 import { buildQueue, SOURCE_LABEL, type SessionOpts, type Source } from '../learn';
 import { useRoute } from '../router';
@@ -41,6 +41,7 @@ export function Session({ mode }: { mode: string }) {
   const [phase, setPhase] = useState<'setup' | 'run' | 'done'>(preset ? 'run' : 'setup');
   const [results, setResults] = useState<Result[]>([]);
   const [run, setRun] = useState(0);
+  useScrollTop(phase);
 
   const s = getState();
   const preview = useMemo(() => buildQueue({ ...opts, ids: undefined }, s), [opts, s, phase]);

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AnswerView, GradeBar, Progress, QHead, Tex } from '../components';
+import { AnswerView, GradeBar, Progress, QHead, Tex, useScrollTop } from '../components';
 import { byId } from '../content';
 import { answerOf } from '../learn';
 import type { Grade } from '../srs';
@@ -8,6 +8,7 @@ import type { ModeProps, Result } from '../screens/Session';
 
 export function Cards({ ids, onDone }: ModeProps) {
   const [i, setI] = useState(0);
+  useScrollTop(i);
   const [side, setSide] = useState<'front' | 'back'>('front');
   const [anim, setAnim] = useState<'' | 'flip-a' | 'flip-b'>('');
   const [results, setResults] = useState<Result[]>([]);

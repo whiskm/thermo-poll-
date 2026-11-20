@@ -22,6 +22,13 @@ function renderTex(tex: string, display: boolean): string {
   return html;
 }
 
+/** Прокрутка наверх при смене вопроса или этапа. */
+export function useScrollTop(dep: unknown) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [dep]);
+}
+
 /** Текст с формулами между знаками $. */
 export function Tex({ s }: { s: string }) {
   return (

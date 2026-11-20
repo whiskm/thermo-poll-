@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { GradeBar, MathBlock, Progress, QHead, Tex } from '../components';
+import { GradeBar, MathBlock, Progress, QHead, Tex, useScrollTop } from '../components';
 import { byId } from '../content';
 import { answerOf } from '../learn';
 import { GRADE_LABEL, gradeFromScore, type Grade } from '../srs';
@@ -44,6 +44,7 @@ function Highlighted({ s, terms, found }: { s: string; terms: string[]; found: S
 
 export function Recall({ ids, onDone }: ModeProps) {
   const [i, setI] = useState(0);
+  useScrollTop(i);
   const [text, setText] = useState('');
   const [checked, setChecked] = useState(false);
   const [results, setResults] = useState<Result[]>([]);

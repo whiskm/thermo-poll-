@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { MathInline, Progress, QHead, Tex } from '../components';
+import { MathInline, Progress, QHead, Tex, useScrollTop } from '../components';
 import { byId } from '../content';
 import { buildCloze } from '../learn';
 import { GRADE_LABEL, gradeFromScore } from '../srs';
@@ -9,6 +9,7 @@ import type { ModeProps, Result } from '../screens/Session';
 
 export function ClozeMode({ ids, opts, onDone }: ModeProps) {
   const [i, setI] = useState(0);
+  useScrollTop(i);
   const [results, setResults] = useState<Result[]>([]);
   const q = byId.get(ids[i])!;
   const cz = useMemo(() => buildCloze(q, getState(), opts.withMath), [q, opts.withMath]);

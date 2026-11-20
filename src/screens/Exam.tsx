@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnswerView, GradeBar, Progress, QHead, Seg, SectionPicker, Tex, Top } from '../components';
+import { AnswerView, GradeBar, Progress, QHead, Seg, SectionPicker, Tex, Top, useScrollTop } from '../components';
 import { QUESTIONS, byId } from '../content';
 import { answerOf, passed } from '../learn';
 import { GRADE_LABEL, type Grade } from '../srs';
@@ -28,6 +28,7 @@ export function Exam() {
   const startPrep = useRef(0);
   const startAll = useRef(0);
   const [seconds, setSeconds] = useState(0);
+  useScrollTop(`${phase}-${i}`);
 
   useEffect(() => {
     if (phase !== 'prep' && phase !== 'answer') return;

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Progress, QHead, Tex } from '../components';
+import { Progress, QHead, Tex, useScrollTop } from '../components';
 import { byId } from '../content';
 import { answerOf, orderScore, scramble } from '../learn';
 import { GRADE_LABEL, gradeFromScore } from '../srs';
@@ -8,6 +8,7 @@ import type { ModeProps, Result } from '../screens/Session';
 
 export function Order({ ids, onDone }: ModeProps) {
   const [i, setI] = useState(0);
+  useScrollTop(i);
   const [results, setResults] = useState<Result[]>([]);
   const q = byId.get(ids[i])!;
   const sentences = useMemo(() => answerOf(q, getState()), [q]);
