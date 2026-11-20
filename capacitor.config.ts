@@ -7,6 +7,11 @@ const config: CapacitorConfig = {
   android: {
     backgroundColor: '#EDF2F0',
   },
+  plugins: {
+    // Отступы под строку состояния задает сам Android, CSS-переменные не внедряются:
+    // режим css в Capacitor 8 пишет ошибку в консоль при старте страницы.
+    SystemBars: { insetsHandling: 'native' },
+  },
 };
 
 export default config;
